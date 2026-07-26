@@ -24,13 +24,13 @@ def run_security_rules(text: str) -> Dict[str, Any]:
         })
 
     # Rule 2: Exposed API Keys & Bearer Tokens
-    if re.search(r'(?:api_key|apikey|secret_key|bearer_token)\s*[:=]\s*["\']?[a-zA-Z0-9_\-]{8,}', text, re.IGNORECASE) or 'sk-' in text or 'bearer ' in text_lower:
+    if re.search(r'(?:api_key|apikey|secret_key|bearer_token)\s*[:=]\s*["\']?[a-zA-Z0-9_\-]{8,}', text, re.IGNORECASE) or 'sk-' in text or 'bearer ' in text_lower or 'send api keys' in text_lower:
         attack_surface.add("Secrets Management")
         rule_issues.append({
             "issue": "Exposed API Key / Authentication Token",
             "severity": "Critical",
             "category": "Secrets Management",
-            "reason": "Production API keys or OAuth Bearer tokens are hardcoded in the codebase/document.",
+            "reason": "Production API keys or OAuth Bearer tokens are requested or hardcoded in document text.",
             "recommendation": "Revoke exposed tokens immediately and load API keys securely via environment variables.",
             "reference": "CWE-798: Use of Hard-coded Credentials",
             "confidence": 0.98
@@ -40,13 +40,13 @@ def run_security_rules(text: str) -> Dict[str, Any]:
     if re.search(r'ignore\s+(?:all\s+)?previous\s+instructions', text_lower) or 'reveal confidential' in text_lower or 'system prompt' in text_lower or 'jailbreak' in text_lower:
         attack_surface.add("AI / LLM Interface")
         rule_issues.append({
-            "issue": "Prompt Injection / Jailbreak Attack Pattern",
-            "severity": "High",
+            "issue": "Prompt Injection Detected",
+            "severity": "Critical",
             "category": "AI / LLM Security",
-            "reason": "Text contains prompt override patterns designed to subvert system instructions and leak data.",
+            "reason": "Text contains prompt override patterns designed to subvert system instructions and leak confidential data.",
             "recommendation": "Sanitize user inputs, enforce strict prompt demarcation, and employ input validation guardrails.",
             "reference": "OWASP Top 10 for LLM Applications: LLM01 - Prompt Injection",
-            "confidence": 0.95
+            "confidence": 0.99
         })
 
     # Rule 4: Dynamic SQL Construction (SQL Injection)

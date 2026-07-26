@@ -4,6 +4,18 @@ venv/
 env/
 ENV/
 
+# Node & Frontend Build
+node_modules/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+.npm/
+
+# Environment Variables & Secrets
+.env
+.env.local
+backend/.env
+
 # Python Cache & Bytecode
 __pycache__/
 *.py[cod]
@@ -21,9 +33,12 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
-# User Uploaded Documents
+# Generated PDF/Excel/JSON Reports & User Uploads
 backend/uploads/*
 !backend/uploads/.gitkeep
+backend/generated_reports/pdf/*
+backend/generated_reports/excel/*
+backend/generated_reports/json/*
 
 # Logs
 *.log

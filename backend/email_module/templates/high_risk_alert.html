@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #fef2f2; color: #1e293b; margin: 0; padding: 20px; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; padding: 32px; border: 2px solid #dc2626; }
+    .header { text-align: center; border-bottom: 2px solid #dc2626; padding-bottom: 16px; margin-bottom: 24px; }
+    .title { color: #dc2626; font-size: 22px; font-weight: bold; margin: 0; }
+    .btn { display: inline-block; padding: 12px 24px; background-color: #dc2626; color: #ffffff; text-decoration: none; font-weight: bold; border-radius: 12px; margin-top: 20px; }
+    .footer { text-align: center; font-size: 11px; color: #94a3b8; margin-top: 32px; border-top: 1px solid #f1f5f9; padding-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1 class="title">CRITICAL HIGH-RISK ALERT</h1>
+    </div>
+    <h2>Immediate Executive Action Required for Audit #{{ audit_id }}</h2>
+    <p>Target Document: <strong>{{ filename }}</strong></p>
+    <p>Composite Risk Score: <strong style="color: #dc2626; font-size: 18px;">{{ score }}/100 (CRITICAL)</strong></p>
+    <p>Our adversarial AI agents detected high-priority compliance or security vectors requiring immediate review prior to signing.</p>
+    <a href="http://localhost:3001/report?id={{ audit_id }}" class="btn">Remediate Critical Risks Now</a>
+    <div class="footer">
+      Corporate Auditor AI Suite • High-Risk Alert Subsystem
+    </div>
+  </div>
+</body>
+</html>

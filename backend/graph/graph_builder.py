@@ -11,10 +11,22 @@ logger = get_logger("graph_builder")
 
 def build_graph():
     """
-    Constructs and compiles the StateGraph workflow connecting:
-    START -> CFO Node -> Legal Node -> Security Node -> Market Node -> Coordinator Node -> END
+    Constructs and compiles the parallel StateGraph workflow:
+    
+                        START
+                          │
+         ┌──────────┬─────┴────┬──────────┐
+         ▼          ▼          ▼          ▼
+       CFO       Legal     Security    Market
+         └──────────┬──────────┴──────────┘
+                    │ (Fan-In Barrier)
+                    ▼
+            Coordinator Agent
+                    │
+                    ▼
+                   END
     """
-    logger.info("Initializing LangGraph StateGraph builder with CFO, Legal, Security, Market, and Coordinator nodes...")
+    logger.info("Initializing Parallel LangGraph StateGraph builder...")
     builder = StateGraph(AgentState)
 
     # Register Nodes
@@ -24,15 +36,22 @@ def build_graph():
     builder.add_node("market", market_node)
     builder.add_node("coordinator", coordinator_node)
 
-    # Define Workflow Edges: START -> CFO -> Legal -> Security -> Market -> Coordinator -> END
+    # Parallel Fan-Out Edges from START to all 4 independent specialist agents
     builder.add_edge(START, "cfo")
-    builder.add_edge("cfo", "legal")
-    builder.add_edge("legal", "security")
-    builder.add_edge("security", "market")
+    builder.add_edge(START, "legal")
+    builder.add_edge(START, "security")
+    builder.add_edge(START, "market")
+
+    # Parallel Fan-In Edges from all 4 specialist agents to Coordinator
+    builder.add_edge("cfo", "coordinator")
+    builder.add_edge("legal", "coordinator")
+    builder.add_edge("security", "coordinator")
     builder.add_edge("market", "coordinator")
+
+    # Edge from Coordinator to END
     builder.add_edge("coordinator", END)
 
-    logger.info("Compiling full multi-agent graph workflow...")
+    logger.info("Compiling parallel multi-agent graph workflow...")
     compiled_graph = builder.compile()
-    logger.info("Graph compiled successfully.")
+    logger.info("Parallel Graph compiled successfully.")
     return compiled_graph

@@ -1,71 +1,88 @@
-# 🚀 Adversarial Corporate Auditor
+# 🛡️ Adversarial Corporate Auditor
 
-> Enterprise Multi-Agent Corporate Audit & Risk Assessment System powered by **LangGraph**, **LangChain**, **FastAPI**, and local **Ollama (`qwen2.5:7b`)**.
+> **Enterprise Multi-Agent Corporate Audit & Strategic Risk Assessment System**  
+> Powered by **LangGraph**, **LangChain**, **FastAPI**, **Neon PostgreSQL**, **React + Vite**, and **ReportLab PDF Generator**.
 
 ---
 
-## 🏛️ System Architecture
+## 🏛️ Executive Overview
 
-The system utilizes a modular, multi-agent state graph architecture built on **LangGraph**. A uploaded corporate proposal or document flows through specialized domain expert agents before being synthesized by the Chief Audit Officer (Coordinator Agent).
+**Adversarial Corporate Auditor** is an enterprise-grade AI risk governance platform. It ingests corporate proposals, pitch decks, financial forecasts, and legal compliance contracts, orchestrating a multi-agent AI panel (**CFO**, **Legal**, **Security**, **Market**, and **Coordinator**) to discover hidden liabilities, financial margin compression, security injection vectors, and regulatory non-compliance before executive sign-off.
+
+---
+
+## 🏗️ System Architecture & Workflow
+
+The platform executes a parallel **Fan-Out / Fan-In Multi-Agent StateGraph Architecture** built on **LangGraph**.
 
 ```text
-               START
-                 │
-                 ▼
-             Upload PDF
-                 │
-                 ▼
-        Extract Text (PyMuPDF)
-                 │
-                 ▼
-    ┌──────────────────────────┐
-    │    LangGraph Workflow    │
-    └──────────────────────────┘
-                 │
-                 ▼
-             CFO Agent
-                 │
-                 ▼
-            Legal Agent
-                 │
-                 ▼
-          Security Agent
-                 │
-                 ▼
-           Market Agent
-                 │
-                 ▼
-       Coordinator Agent (CAO)
-                 │
-                 ▼
-                END
+                                  ┌────────────────────────┐
+                                  │      User Upload       │
+                                  └───────────┬────────────┘
+                                              │
+                                              ▼
+                                  ┌────────────────────────┐
+                                  │ PyMuPDF Text Extractor │
+                                  └───────────┬────────────┘
+                                              │
+                                              ▼
+                      ┌──────────────────────────────────────────────┐
+                      │    Parallel Fan-Out LangGraph StateGraph     │
+                      └──────┬────────────┬────────────┬───────┬─────┘
+                             │            │            │       │
+                             ▼            ▼            ▼       ▼
+                        ┌─────────┐  ┌─────────┐  ┌────────┐ ┌────────┐
+                        │ CFO     │  │ Legal   │  │Security│ │ Market │
+                        │ Agent   │  │ Agent   │  │ Agent  │ │ Agent  │
+                        └────┬────┘  └────┬────┘  └───┬────┘ └───┬────┘
+                             │            │            │       │
+                             └────────────┼────────────┴───────┘
+                                          │
+                                          ▼
+                             ┌─────────────────────────┐
+                             │ Coordinator Agent (CAO) │
+                             └────────────┬────────────┘
+                                          │
+                                          ▼
+                      ┌──────────────────────────────────────────────┐
+                      │  PostgreSQL Persistence + 3-Page Executive  │
+                      │   PDF / Excel / JSON Multi-Format Output     │
+                      └──────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🤖 Domain Agents Breakdown
+## 🤖 Specialized AI Domain Agents
 
-Every agent follows a unified, standardized 4-module design pattern (`prompt.py`, `parser.py`, `rules.py`, `node.py`):
+Every domain agent implements a standardized 4-module design pattern (`prompt.py`, `parser.py`, `rules.py`, `node.py`):
 
 1. **CFO Agent (`agents/cfo/`)**:
-   * Analyzes financial feasibility, budget allocations, burn rate, ROI anomalies, and cost structures.
-   * Includes deterministic rules for 50x+ ROI multiplier anomalies and aggressive short timelines.
+   - Audits unit economics, OPEX margin compression, burn rate, and revenue growth projections.
+   - Enforces deterministic rules for unrealistic 50x+ ROI multipliers and inflation misalignment.
 
 2. **Legal Agent (`agents/legal/`)**:
-   * Evaluates GDPR, SOC 2, ISO 27001, Privacy Policy/T&C gaps, employee NDAs, and contract risks.
-   * Includes deterministic rules for plaintext password storage and unconsented customer data sharing.
+   - Evaluates GDPR Art 17, SOC 2 Type II, ISO 27001 compliance, employee NDAs, and contract liabilities.
+   - Enforces deterministic rules for unconsented data sharing and indemnification ambiguities.
 
 3. **Security Agent (`agents/security/`)**:
-   * Detects prompt injection, hardcoded secrets/API keys, SQL injection, unsafe code execution (`eval`/`exec`), and unauthenticated admin access.
-   * Maps findings to **OWASP Top 10** and **MITRE ATT&CK** frameworks.
+   - Scans for prompt injection attacks, hardcoded API secrets, PII exposure, and unauthenticated admin access.
+   - Maps vulnerabilities directly to **OWASP Top 10** and **MITRE ATT&CK** matrix standards.
 
 4. **Market Agent (`agents/market/`)**:
-   * Evaluates market viability, customer segmentation (ICP), pricing strategy, SWOT analysis, and competitive positioning.
-   * Includes deterministic business rules for missing competition, pricing, and USP.
+   - Benchmarks competitor pricing models, Ideal Customer Profile (ICP), customer acquisition cost (CAC), and market sizing.
+   - Enforces rules for unverified TAM claims and missing competitor pricing analysis.
 
 5. **Coordinator Agent (`agents/coordinator/`)**:
-   * Synthesizes findings across all 4 specialist agents without re-analyzing the original document.
-   * Performs deterministic scoring, issue deduplication, and generates a structured executive action plan (`immediate`, `short_term`, `long_term`) and health verdict.
+   - Deduplicates findings across domain agents and computes deterministic composite risk scores (0–100).
+   - Generates a prioritized **Strategic Action Plan & Remediation Roadmap** (Immediate, Short-Term, Long-Term).
+
+---
+
+## 💻 Tech Stack
+
+- **Backend**: Python 3.10+, FastAPI, SQLAlchemy, Neon PostgreSQL, Celery + Redis, PyMuPDF, ReportLab, LangGraph, LangChain.
+- **AI Models**: Ollama (`qwen2.5:7b`), DeepSeek-R1, Llama 3 8B.
+- **Frontend**: React 18, Vite, Tailwind CSS, Material Symbols, Lucide Icons, Canvas API.
 
 ---
 
@@ -73,7 +90,6 @@ Every agent follows a unified, standardized 4-module design pattern (`prompt.py`
 
 ```text
 Corporate-Auditor/
-│
 ├── backend/
 │   ├── agents/
 │   │   ├── cfo/              # CFO Agent (prompt, parser, rules, node)
@@ -81,81 +97,66 @@ Corporate-Auditor/
 │   │   ├── security/         # Security Agent (prompt, parser, rules, node)
 │   │   ├── market/           # Market Agent (prompt, parser, rules, node)
 │   │   └── coordinator/      # Coordinator Agent (prompt, parser, scorer, node)
-│   │
-│   ├── graph/
-│   │   ├── state.py          # Shared AgentState TypedDict
-│   │   ├── llm.py            # Reusable ChatOllama instance
-│   │   ├── graph_builder.py  # StateGraph builder and compilation
-│   │   └── workflow.py       # Compiled app_graph export
-│   │
+│   ├── auth/                 # Auth JWT & Avatar Routes
+│   ├── database/             # Neon PostgreSQL Models & CRUD
+│   ├── graph/                # LangGraph Fan-Out Parallel Workflow
+│   ├── reports/              # 3-Page Executive PDF Generator & Exporters
 │   ├── schemas/              # Pydantic v2 Type Safety Schemas
-│   │   ├── common.py
-│   │   ├── cfo.py
-│   │   ├── legal.py
-│   │   ├── security.py
-│   │   ├── market.py
-│   │   └── audit.py
-│   │
-│   ├── utils/                # System Utilities
-│   │   ├── json_utils.py     # JSON repair & Pydantic validation helper
-│   │   ├── logger.py         # Standardized logging utility
-│   │   └── pdf_reader.py     # PyMuPDF text extractor
-│   │
-│   ├── tests/                # Test Suites & Sample Documents
-│   │   ├── sample_documents/
-│   │   │   └── proposal.pdf
-│   │   ├── test_cfo.py
-│   │   ├── test_legal.py
-│   │   ├── test_security.py
-│   │   ├── test_market.py
-│   │   └── test_coordinator.py
-│   │
-│   ├── app.py                # FastAPI REST API (/audit, /cfo, /legal, /security, /market)
-│   └── requirements.txt
-│
-└── frontend/                 # Frontend Dashboard
+│   ├── tests/                # E2E Test Suite (Phase 1 - Phase 6)
+│   └── app.py                # FastAPI Server Engine
+└── frontend/                 # React + Vite SaaS Dashboard
 ```
 
 ---
 
-## 🛠️ Setup & Installation
+## 🛠️ Quick Start & Setup Guide
 
-### Prerequisites
-* Python 3.10+
-* [Ollama](https://ollama.com/) running locally with `qwen2.5:7b` model installed:
+### 1. Prerequisites
+- **Python 3.10+**
+- **Node.js 18+ & npm**
+- **Ollama** running locally:
   ```bash
   ollama run qwen2.5:7b
   ```
 
-### Quick Start
+### 2. Backend Setup
+```bash
+cd backend
+python -m venv venv
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/HackIndiaXYZ/hackindia-spark-11-hyderabad-telangana-south-central-region-505-error.git
-   cd hackindia-spark-11-hyderabad-telangana-south-central-region-505-error/backend
-   ```
+# Windows:
+.\venv\Scripts\activate
 
-2. **Set up Virtual Environment**:
-   ```bash
-   python -m venv venv
-   # On Windows:
-   .\venv\Scripts\activate
-   # On Linux/macOS:
-   source venv/bin/activate
-   ```
+# Install dependencies:
+pip install -r requirements.txt
 
-3. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Start Backend Server:
+python -m uvicorn app:app --reload --port 8000
+```
 
-4. **Run Test Suite**:
-   ```bash
-   python tests/test_coordinator.py
-   ```
+### 3. Frontend Setup
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-5. **Start FastAPI Development Server**:
-   ```bash
-   uvicorn app:app --reload
-   ```
-   Open Swagger UI documentation at: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+The application will be running at:
+- **Frontend Portal**: `http://localhost:3000`
+- **FastAPI Documentation**: `http://127.0.0.1:8000/docs`
+
+---
+
+## 🧪 Automated Testing
+
+Run the Phase 6 End-to-End user journey test suite:
+```bash
+cd backend
+venv\Scripts\python.exe tests/run_phase6_tests.py
+```
+
+---
+
+## 📜 License
+
+Distributed under the MIT License. See `LICENSE` for details.
